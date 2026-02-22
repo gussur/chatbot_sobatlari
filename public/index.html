@@ -26,7 +26,7 @@
         .message { margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; line-height: 1.4; white-space: pre-wrap; }
         .user { background-color: #dcfce7; text-align: right; margin-left: 5%; border-bottom-right-radius: 0; color: #166534; }
         .bot { background-color: #f3f4f6; text-align: left; margin-right: 5%; border-bottom-left-radius: 0; color: #1f2937; }
-        /* --- GAYA UNTUK TOMBOL COPY --- */
+        /* Tombol copy --- */
         .copy-btn {
         display: block;
         margin-top: 15px;
@@ -39,7 +39,11 @@
         cursor: pointer;
         font-weight: bold;
         }
-        .copy-btn:hover { background-color: #9ca3af; color: white; }     
+        .copy-btn:hover { background-color: #9ca3af; color: white; }
+        /* Tombol Upload */
+        #upload-btn { background-color: #e5e7eb; color: #374151; padding: 12px; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; }
+        #upload-btn:hover { background-color: #d1d5db; }
+        #image-preview { display: none; font-size: 13px; color: #15803d; margin-top: 8px; font-weight: bold; text-align: right; }     
         /* Mengatur kolom ketik dan tombol kirim */
         #chat-form { display: flex; gap: 10px; align-items: stretch; }
         /* Mengganti 'input' menjadi 'textarea' agar bisa banyak baris */
@@ -47,27 +51,68 @@
         button { padding: 12px 20px; background-color: #16a34a; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #15803d; }
 
-        /* --- MERAPATKAN JARAK PARAGRAF DAN POINTER DARI AI --- */
+        /* Merapatkan jarak paragraf dan pointer  */
+        .message h1, .message h2, .message h3, 
+        .message h4, .message h5, .message h6 {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        /* Jika h2/h3 adalah elemen pertama, buang margin atas */
+        .message h2:first-child, .message h3:first-child {
+            margin-top: 0;
+        }
+
+        /* Batasi efek <br> berlebih */
+        .message br {
+            display: block;
+            content: "";
+            margin: 0;
+        }
         .message p { 
             margin-top: 0; 
-            margin-bottom: 2px; 
+            margin-bottom: 0px; 
         }
         .message li p { 
             margin: 0; 
         }
         .message ul, .message ol { 
-            margin-top: 2px;
-            margin-bottom: 2px; 
+            margin-top: 0px;
+            margin-bottom: 0px; 
             padding-left: 20px; 
         }
         .message li { 
-            margin-bottom: 2px; 
+            margin-bottom: 0px; 
             line-height: 1.4;
         }
         .message p:last-child, .message ul:last-child {
             margin-bottom: 0; 
         }
-
+        /* Animasi biar gak stre menunggu --- */
+        .typing-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #15803d;
+        }
+        .runner-icon {
+            font-size: 22px;
+            display: inline-block;
+            animation: lari-lari 0.5s infinite alternate ease-in-out; 
+        }
+        @keyframes lari-lari {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-5px) rotate(10deg); }
+        }
+        .typing-text {
+            animation: kedip-kedip 1.5s infinite ease-in-out;
+        }
+        @keyframes kedip-kedip {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -78,10 +123,16 @@
         <div class="message bot">Halo Master Runners! Saya SobatLari. Ada yang bisa saya bantu untuk jadwal lari atau recovery hari ini? Atau mau bertanya tentang dunia lari? Jangan sungkan! </div>
     </div>
     
-<form id="chat-form">
-        <textarea id="user-input" placeholder="Tanya soal pace, cedera, atau curhat lari di sini..." required></textarea>
+    <form id="chat-form">
+        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+        
+        <button type="button" id="upload-btn" title="Upload Screenshot Strava">📸</button>
+        
+        <textarea id="user-input" placeholder="Tanya soal pace, upload Strava, atau curhat lari..." required></textarea>
         <button type="submit">Kirim</button>
     </form>
+    
+    <div id="image-preview"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
