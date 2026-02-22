@@ -15,7 +15,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.post('/api/chat', async (req, res) => {
     try {
         // 1. Ambil pesan teks dan gambar dari Front-end (Ini yang benar, tidak ada kembarannya)
-        const { message: userMessage, image: userImage } = req.body;
+        const { message: userMessage, image: userImage, history } = req.body;
 
         // 2. Kalender otomatis
         const hariIni = new Date().toLocaleDateString('id-ID', {
