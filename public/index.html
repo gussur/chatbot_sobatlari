@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SobatLari 50+ Chatbot</title>
     <style>
-        /* Mengatur gaya dasar halaman (warna latar, font) */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 750px; margin: 40px auto; background-color: #f0fdf4; color: #333; }
+        /* ==========================================
+           1. RESET & BASE STYLES
+           ========================================== */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 750px; 
+            margin: 40px auto; 
+            background-color: #f0fdf4; 
+            color: #333; 
+        }
         h2 { color: #166534; text-align: center; }
-        p.subtitle { text-align: center; color: #4b5563; font-size: 0.9em; margin-bottom: 20px;}
+        p.subtitle { 
+            text-align: center; 
+            color: #4b5563; 
+            font-size: 0.9em; 
+            margin-bottom: 20px;
+        }
         
-        /* Mengatur kotak tempat percakapan (chatbox) */
+        /* ==========================================
+           2. CHATBOX
+           ========================================== */
         #chat-box { 
             height: 450px; 
             border: 2px solid #bbf7d0; 
@@ -22,74 +37,164 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
         }
         
-        /* Mengatur gaya gelembung obrolan (bubble chat) */
-        .message { margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; line-height: 1.4; white-space: pre-wrap; }
-        .user { background-color: #dcfce7; text-align: right; margin-left: 5%; border-bottom-right-radius: 0; color: #166534; }
-        .bot { background-color: #f3f4f6; text-align: left; margin-right: 5%; border-bottom-left-radius: 0; color: #1f2937; }
-        /* Tombol copy --- */
-        .copy-btn {
-        display: block;
-        margin-top: 15px;
-        padding: 6px 12px;
-        font-size: 13px;
-        background-color: #d1d5db; /* Warna abu-abu tombol */
-        color: #374151;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
+        /* ==========================================
+           3. BUBBLE CHAT - UTAMA
+           ========================================== */
+        .message { 
+            margin-bottom: 12px; 
+            padding: 10px 14px;   
+            border-radius: 8px; 
+            line-height: 1.4; 
+            white-space: pre-wrap; 
         }
-        .copy-btn:hover { background-color: #9ca3af; color: white; }
-        /* Tombol Upload */
-        #upload-btn { background-color: #e5e7eb; color: #374151; padding: 12px; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; }
-        #upload-btn:hover { background-color: #d1d5db; }
-        #image-preview { display: none; font-size: 13px; color: #15803d; margin-top: 8px; font-weight: bold; text-align: right; }     
-        /* Mengatur kolom ketik dan tombol kirim */
-        #chat-form { display: flex; gap: 10px; align-items: stretch; }
-        /* Mengganti 'input' menjadi 'textarea' agar bisa banyak baris */
-        textarea { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; font-family: inherit; resize: vertical; min-height: 50px; max-height: 150px; }
-        button { padding: 12px 20px; background-color: #16a34a; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #15803d; }
-
-        /* Merapatkan jarak paragraf dan pointer  */
-        .message h1, .message h2, .message h3, 
-        .message h4, .message h5, .message h6 {
-            margin-top: 8px;
-            margin-bottom: 4px;
-            line-height: 1.3;
+        
+        .user { 
+            background-color: #dcfce7; 
+            text-align: right; 
+            margin-left: 5%; 
+            border-bottom-right-radius: 0; 
+            color: #166534; 
         }
-
-        /* Jika h2/h3 adalah elemen pertama, buang margin atas */
-        .message h2:first-child, .message h3:first-child {
-            margin-top: 0;
+        
+        .bot { 
+            background-color: #f3f4f6; 
+            text-align: left; 
+            margin-right: 5%; 
+            border-bottom-left-radius: 0; 
+            color: #1f2937; 
         }
-
-        /* Batasi efek <br> berlebih */
+        
+        /* ==========================================
+           4. KONTEN DI DALAM BUBBLE 
+           ========================================== */
+        
+        /* Reset semua margin di dalam bubble */
+        .message > * {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Paragraf */
+        .message p {
+            margin-bottom: 8px !important;
+        }
+        
+        /* Heading */
+        .message h1, 
+        .message h2, 
+        .message h3, 
+        .message h4, 
+        .message h5, 
+        .message h6 {
+            margin-top: 12px !important;
+            margin-bottom: 4px !important;
+            font-size: 1.1em !important;
+            line-height: 1.3 !important;
+        }
+        
+        /* List */
+        .message ul, 
+        .message ol {
+            margin-bottom: 8px !important;
+            padding-left: 20px !important;
+        }
+        
+        .message li {
+            margin-bottom: 4px !important;
+        }
+        
+        /* Paragraf di dalam list */
+        .message li p {
+            margin-bottom: 2px !important;
+            margin-top: 0 !important;
+            line-height: 1.4 !important;
+        }
+        
+        /* Hilangkan BR ganda */
         .message br {
+            display: none !important;
+        }
+        
+        /* ==========================================
+           5. TOMBOL COPY
+           ========================================== */
+        .copy-btn {
             display: block;
-            content: "";
-            margin: 0;
+            margin-top: 15px;
+            padding: 6px 12px;
+            font-size: 13px;
+            background-color: #d1d5db;
+            color: #374151;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
         }
-        .message p { 
-            margin-top: 0; 
-            margin-bottom: 0px; 
+        .copy-btn:hover { 
+            background-color: #9ca3af; 
+            color: white; 
         }
-        .message li p { 
-            margin: 0; 
+        
+        /* ==========================================
+           6. UPLOAD & FORM
+           ========================================== */
+        #upload-btn { 
+            background-color: #e5e7eb; 
+            color: #374151; 
+            padding: 12px; 
+            font-size: 18px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
         }
-        .message ul, .message ol { 
-            margin-top: 0px;
-            margin-bottom: 0px; 
-            padding-left: 20px; 
+        #upload-btn:hover { 
+            background-color: #d1d5db; 
         }
-        .message li { 
-            margin-bottom: 0px; 
-            line-height: 1.4;
+        
+        #image-preview { 
+            display: none; 
+            font-size: 13px; 
+            color: #15803d; 
+            margin-top: 8px; 
+            font-weight: bold; 
+            text-align: right; 
         }
-        .message p:last-child, .message ul:last-child {
-            margin-bottom: 0; 
+        
+        #chat-form { 
+            display: flex; 
+            gap: 10px; 
+            align-items: stretch; 
         }
-        /* Animasi biar gak stre menunggu --- */
+        
+        textarea { 
+            flex-grow: 1; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-family: inherit; 
+            resize: vertical; 
+            min-height: 50px; 
+            max-height: 150px; 
+        }
+        
+        button[type="submit"] { 
+            padding: 12px 20px; 
+            background-color: #16a34a; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        button[type="submit"]:hover { 
+            background-color: #15803d; 
+        }
+
+        /* ==========================================
+           7. ANIMASI TYPING
+           ========================================== */
         .typing-container {
             display: flex;
             align-items: center;
@@ -125,9 +230,7 @@
     
     <form id="chat-form">
         <input type="file" id="image-upload" accept="image/*" style="display: none;">
-        
         <button type="button" id="upload-btn" title="Upload Screenshot Strava">📸</button>
-        
         <textarea id="user-input" placeholder="Tanya soal pace, upload Strava, atau curhat lari..." required></textarea>
         <button type="submit">Kirim</button>
     </form>
@@ -135,7 +238,6 @@
     <div id="image-preview"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
     <script src="script.js"></script>
 </body>
 </html>
