@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SobatLari 50+ Chatbot</title>
+    <style>
+        /* Mengatur gaya dasar halaman (warna latar, font) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 750px; margin: 40px auto; background-color: #f0fdf4; color: #333; }
+        h2 { color: #166534; text-align: center; }
+        p.subtitle { text-align: center; color: #4b5563; font-size: 0.9em; margin-bottom: 20px;}
+        
+        /* Mengatur kotak tempat percakapan (chatbox) */
+        #chat-box { 
+            height: 450px; 
+            border: 2px solid #bbf7d0; 
+            border-radius: 10px; 
+            padding: 15px; 
+            overflow-y: scroll; 
+            margin-bottom: 15px; 
+            background-color: #ffffff; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+        
+        /* Mengatur gaya gelembung obrolan (bubble chat) */
+        .message { margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; line-height: 1.4; white-space: pre-wrap; }
+        .user { background-color: #dcfce7; text-align: right; margin-left: 5%; border-bottom-right-radius: 0; color: #166534; }
+        .bot { background-color: #f3f4f6; text-align: left; margin-right: 5%; border-bottom-left-radius: 0; color: #1f2937; }
+        /* --- GAYA UNTUK TOMBOL COPY --- */
+        .copy-btn {
+        display: block;
+        margin-top: 15px;
+        padding: 6px 12px;
+        font-size: 13px;
+        background-color: #d1d5db; /* Warna abu-abu tombol */
+        color: #374151;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        }
+        .copy-btn:hover { background-color: #9ca3af; color: white; }     
+        /* Mengatur kolom ketik dan tombol kirim */
+        #chat-form { display: flex; gap: 10px; align-items: stretch; }
+        /* Mengganti 'input' menjadi 'textarea' agar bisa banyak baris */
+        textarea { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; font-family: inherit; resize: vertical; min-height: 50px; max-height: 150px; }
+        button { padding: 12px 20px; background-color: #16a34a; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #15803d; }
+
+        /* --- MERAPATKAN JARAK PARAGRAF DAN POINTER DARI AI --- */
+        .message p { 
+            margin-top: 0; 
+            margin-bottom: 2px; 
+        }
+        .message li p { 
+            margin: 0; 
+        }
+        .message ul, .message ol { 
+            margin-top: 2px;
+            margin-bottom: 2px; 
+            padding-left: 20px; 
+        }
+        .message li { 
+            margin-bottom: 2px; 
+            line-height: 1.4;
+        }
+        .message p:last-child, .message ul:last-child {
+            margin-bottom: 0; 
+        }
+
+    </style>
+</head>
+<body>
+    <h2>🏃‍♂️ SobatLari 50+</h2>
+    <p class="subtitle">Asisten Lari & Kebugaran Khusus Usia Emas</p>
+    
+    <div id="chat-box">
+        <div class="message bot">Halo Master Runners! Saya SobatLari. Ada yang bisa saya bantu untuk jadwal lari atau recovery hari ini? Atau mau bertanya tentang dunia lari? Jangan sungkan! </div>
+    </div>
+    
+<form id="chat-form">
+        <textarea id="user-input" placeholder="Tanya soal pace, cedera, atau curhat lari di sini..." required></textarea>
+        <button type="submit">Kirim</button>
+    </form>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
