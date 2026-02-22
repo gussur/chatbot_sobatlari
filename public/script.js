@@ -2,6 +2,7 @@
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const chatBox = document.getElementById('chat-box');
+let chatHistory = [];
 
 // Fungsi untuk membersihkan spasi berlebih dari output AI
 function cleanMarkdown(text) {
@@ -94,6 +95,9 @@ chatForm.addEventListener('submit', async (e) => {
         });
 
         const data = await response.json();
+
+        chatHistory.push({ role: "user", text: message });
+        chatHistory.push({ role: "model", text: data.reply });
 
         base64Image = null;
         mimeType = null;

@@ -42,24 +42,32 @@ app.post('/api/chat', async (req, res) => {
             ]
         });
 
-        // 4. Proses memanggil AI (Bisa baca teks biasa ATAU teks + gambar)
-        let result;
-        if (userImage) {
-            const imagePart = {
-                inlineData: {
-                    data: userImage.data,
-                    mimeType: userImage.mimeType
-                }
-            };
-            // Suruh AI baca pesan + gambarnya sekaligus!
-            result = await model.generateContent([userMessage, imagePart]);
-        } else {
-            // Kalau cuma nanya lewat teks biasa
-            result = await model.generateContent(userMessage);
+    // 4. Membuat AI tidak lupa percakapan
+        const contents = [];
+        
+        // A. Susun ingatan masa lalu (jika ada)
+        if (history && history.length > 0) {
+            history.forEach(chat => {
+                contents.push({
+                    role: chat.role,
+                    parts: [{ text: chat.text }]
+                });
+            });
         }
 
-        // 5. Kirim balasan ke Front-end
+        // B. Susun pesan yang baru saja diketik (ditambah gambar jika ada)
+        const currentParts = [{ text: userMessage }];
+        if (userImage) {
+            currentParts.push({
+                inlineData: { data: userImage.data, mimeType: userImage.mimeType }
+            });
+        }
+        contents.push({ role: "user", parts: currentParts });
+
+        // 5. AI berpikir menggunakan seluruh ingatan
+        const result = await model.generateContent({ contents: contents });
         const responseText = result.response.text();
+
         res.json({ reply: responseText });
 
     } catch (error) {
