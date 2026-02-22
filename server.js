@@ -68,6 +68,9 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`🚀 Server SobatLari sudah siap dan berlari di http://localhost:${port}`);
+// Ambil port dari Render, atau pakai 3000 kalau di laptop
+const PORT = process.env.PORT || 3000; 
+
+app.listen(PORT, () => {
+    console.log(`SobatLari sudah siap dan berlari di port ${PORT}`);
 });
