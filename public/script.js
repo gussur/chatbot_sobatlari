@@ -7,8 +7,48 @@ let chatHistory = [];
 // Fungsi untuk membersihkan spasi berlebih dari output AI
 function cleanMarkdown(text) {
     return text
-        .replace(/\n{3,}/g, '\n\n')  // maks 2 newline berurutan
+        .replace(/\n{3,}/g, '\n\n')
         .trim();
+}
+
+function formatReferences(html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    const elements = Array.from(tempDiv.children);
+    let refStartIndex = -1;
+
+    elements.forEach((el, index) => {
+        const text = el.textContent.trim().toLowerCase();
+        if (text === "referensi:" || text === "referensi") {
+            refStartIndex = index;
+        }
+    });
+
+    if (refStartIndex !== -1) {
+        const details = document.createElement("details");
+        details.className = "references";
+
+        const summary = document.createElement("summary");
+        summary.textContent = "Lihat Referensi";
+
+        const list = document.createElement("ol");
+
+        for (let i = refStartIndex + 1; i < elements.length; i++) {
+            const li = document.createElement("li");
+            li.textContent = elements[i].textContent;
+            list.appendChild(li);
+            elements[i].remove();
+        }
+
+        elements[refStartIndex].remove();
+
+        details.appendChild(summary);
+        details.appendChild(list);
+        tempDiv.appendChild(details);
+    }
+
+    return tempDiv.innerHTML;
 }
 
 // Fungsi untuk membuat gelembung chat baru di layar
@@ -16,73 +56,69 @@ function addMessage(sender, text) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
     
-    // Kita bungkus teksnya dulu
     const textDiv = document.createElement('div');
+
     if (sender === 'bot') {
-        textDiv.innerHTML = marked.parse(cleanMarkdown(text)); // Terjemahkan bintang jadi tebal
+        let formatted = marked.parse(cleanMarkdown(text));
+        formatted = formatReferences(formatted); // 👈 tambahan baru
+        textDiv.innerHTML = formatted;
     } else {
         textDiv.textContent = text;
     }
+
     messageDiv.appendChild(textDiv);
     
-    // 👇 FITUR TOMBOL COPY KHUSUS UNTUK BOT 👇
+    // Tombol copy untuk bot
     if (sender === 'bot') {
         const copyBtn = document.createElement('button');
         copyBtn.textContent = "📋 Copy Jawaban";
         copyBtn.classList.add('copy-btn');
         
-        // Apa yang terjadi saat tombol diklik?
         copyBtn.onclick = () => {
-            navigator.clipboard.writeText(text); // Script ajaib untuk copy!
+            navigator.clipboard.writeText(text);
             copyBtn.textContent = "✅ Berhasil dicopy!";
-            copyBtn.style.backgroundColor = "#16a34a"; // Berubah hijau sebentar
+            copyBtn.style.backgroundColor = "#16a34a";
             copyBtn.style.color = "white";
             
-            // Balik ke tampilan semula setelah 2 detik
             setTimeout(() => { 
                 copyBtn.textContent = "📋 Copy Jawaban"; 
                 copyBtn.style.backgroundColor = "#d1d5db";
                 copyBtn.style.color = "#374151";
             }, 2000); 
         };
+
         messageDiv.appendChild(copyBtn);
     }
     
     chatBox.appendChild(messageDiv);
-    
-    // Otomatis scroll ke bawah
     chatBox.scrollTop = chatBox.scrollHeight; 
 }
 
-// Apa yang terjadi saat tombol "Kirim" ditekan?
+// Submit handler
 chatForm.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Mencegah halaman web refresh/reload
+    e.preventDefault();
     
     const message = userInput.value;
-    if (!message) return; // Kalau kosong, jangan lakukan apa-apa
+    if (!message) return;
 
-    // 1. Tampilkan pesan Kakak di layar (sebelah kanan)
     addMessage('user', message);
-    userInput.value = ''; // Kosongkan kolom ketik
+    userInput.value = '';
 
-    // 2. Tampilkan teks "Sedang mengetik..." sementara menunggu AI
-        const typingDiv = document.createElement('div');
-        typingDiv.classList.add('message', 'bot');
-        typingDiv.id = "typing-indicator";
+    const typingDiv = document.createElement('div');
+    typingDiv.classList.add('message', 'bot');
+    typingDiv.id = "typing-indicator";
         
-        // Kita masukkan kode HTML animasi ke dalam gelembung chat-nya
-        typingDiv.innerHTML = `
-            <div class="typing-container">
-                <span class="runner-icon">🏃‍♂️💨</span> 
-                <span class="typing-text">SobatLari sedang sprint cari referensi...</span>
-            </div>
-        `;
+    typingDiv.innerHTML = `
+        <div class="typing-container">
+            <span class="runner-icon">🏃‍♂️💨</span> 
+            <span class="typing-text">SobatLari sedang sprint cari referensi...</span>
+        </div>
+    `;
         
-        chatBox.appendChild(typingDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
-    // 3. Mengirim pesan (dan gambar kalau ada) ke Backend
         const requestBody = { message: message };
         if (base64Image) {
             requestBody.image = { data: base64Image, mimeType: mimeType };
@@ -104,20 +140,16 @@ chatForm.addEventListener('submit', async (e) => {
         imagePreview.style.display = 'none';
         imageUpload.value = '';
         
-        // 4. Hapus tulisan "Sedang mengetik..."
         document.getElementById('typing-indicator').remove();
-        
-        // 5. Tampilkan balasan cerdas dari AI di layar (sebelah kiri)
         addMessage('bot', data.reply);
 
     } catch (error) {
-        // Kalau terjadi error jaringan
         document.getElementById('typing-indicator').remove();
         addMessage('bot', 'Aduh, koneksi terputus nih Kak. Coba cek internetnya ya.');
     }
 });
 
-// --- Fitur upload gambar Strava ---
+// Upload gambar
 const imageUpload = document.getElementById('image-upload');
 const uploadBtn = document.getElementById('upload-btn');
 const imagePreview = document.getElementById('image-preview');
