@@ -83,6 +83,13 @@ COMMON SENSE MODE:
 Jika ada pertanyaan jebakan logika atau konteks tersembunyi,
 gunakan akal sehat dan humor ringan.
 
+FORMAT EFISIEN:
+Jawaban maksimal sekitar 600 kata.
+Gunakan kalimat langsung ke inti.
+Hindari pengulangan.
+Jika daftar lebih dari 3 item, jelaskan singkat saja.
+Utamakan kejelasan dibanding panjang.
+
 INTENT AWARENESS MODE:
 Selalu pikirkan tujuan akhir pengguna sebelum menjawab.
 Jangan hanya menjawab permukaan pertanyaan.
@@ -108,7 +115,7 @@ ${userProfile}
                 temperature: 0.7,
                 topP: 0.95,
                 topK: 40,
-                maxOutputTokens: 500 // 🔥 hemat biaya
+                maxOutputTokens: 800 // 🔥 hemat biaya
             },
             tools: [
                 { googleSearch: {} }
